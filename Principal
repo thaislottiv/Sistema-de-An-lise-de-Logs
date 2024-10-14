@@ -1,0 +1,39 @@
+import pandas as pd
+import re
+
+class LogAnalyzer:
+    def __init__(self, log_file):
+        self.log_file = log_file
+        self.logs = []
+
+    def read_logs(self):
+        with open(self.log_file, 'r') as file:
+            self.logs = file.readlines()
+
+    def filter_logs(self, keyword):
+        return [log for log in self.logs if keyword in log]
+
+    def count_errors(self):
+        error_logs = self.filter_logs("ERROR")
+        return len(error_logs)
+
+    def count_warnings(self):
+        warning_logs = self.filter_logs("WARNING")
+        return len(warning_logs)
+
+    def analyze(self):
+        self.read_logs()
+        error_count = self.count_errors()
+        warning_count = self.count_warnings()
+
+        print(f"Total Errors: {error_count}")
+        print(f"Total Warnings: {warning_count}")
+
+    def save_filtered_logs(self, keyword, output_file):
+        filtered_logs = self.filter_logs(keyword)
+        with open(output_file, 'w') as file:
+            file.writelines(filtered_logs)
+
+log_analyzer = LogAnalyzer('example_log.log')
+log_analyzer.analyze()
+log_analyzer.save_filtered_logs('ERROR', 'error_logs.log')
